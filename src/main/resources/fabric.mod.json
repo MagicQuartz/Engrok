@@ -3,7 +3,7 @@
 	"id": "engrok",
 	"version": "${version}",
 	"name": "Engrok",
-	"description": "Automatically opens an Ngrok server on a Minecraft Fabric server",
+	"description": "Automatically opens an Ngrok server on a Dedicated Minecraft Fabric server",
 	"authors": [
 		"MagicQuartz"
 	],
@@ -20,9 +20,6 @@
 		],
 		"server": [
 			"io.github.magicquartz.engrok.EngrokServer"
-		],
-		"fabric-datagen": [
-			"io.github.magicquartz.engrok.EngrokDataGenerator"
 		]
 	},
 	"mixins": [

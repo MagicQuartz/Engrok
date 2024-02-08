@@ -103,6 +103,8 @@ public class GitHubGists {
     public String getGistUrl() throws IOException
     {
         String gistId = config.gistId;
+        if(gistId.isEmpty())
+            return "Error: No Gist ID Exists in the config file!";
         String apiUrl = GITHUB_API_BASE_URL + "/gists/" + gistId;
         URL url = new URL(apiUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -126,6 +128,8 @@ public class GitHubGists {
     
     public String getGistContent() throws IOException {
         String gistId = config.gistId;
+        if(gistId.isEmpty())
+            return "Error: No Gist ID Exists in the config file!";
         String apiUrl = GITHUB_API_BASE_URL + "/gists/" + gistId;
         URL url = new URL(apiUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();

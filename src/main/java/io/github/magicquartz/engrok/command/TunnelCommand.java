@@ -3,7 +3,6 @@ package io.github.magicquartz.engrok.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import io.github.magicquartz.engrok.Engrok;
 import io.github.magicquartz.engrok.config.EngrokConfig;
 import io.github.magicquartz.engrok.initialization.LoadWorldInvoker;

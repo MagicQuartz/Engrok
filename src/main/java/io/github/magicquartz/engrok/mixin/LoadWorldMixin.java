@@ -58,7 +58,7 @@ public class LoadWorldMixin implements LoadWorldInvoker {
 		Engrok.canCommand = false;
 		Thread thread = new Thread(() ->
 		{
-			if (config.ngrokAuthToken.equals("Insert your Ngrok auth token here")) {
+			if (config.ngrokAuthToken.equals("Insert your Ngrok auth token here") || config.ngrokAuthToken.isEmpty()) {
 				// Check if authToken field has actually been changed, if not, print this text in chat
 				Engrok.LOGGER.error("You need insert your Ngrok auth token in the config file in order for it to open a tunnel!\n The config file is located in the server folder, under config/engrok.json5\n You can do this in the mods folder, inside the Engrok mod config.\n You can obtain your Auth token from the Ngrok website after logging in.");
 			} else {

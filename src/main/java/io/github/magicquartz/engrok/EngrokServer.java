@@ -1,10 +1,8 @@
 package io.github.magicquartz.engrok;
 
-import io.github.magicquartz.engrok.command.TunnelCommand;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 
 import static io.github.magicquartz.engrok.Engrok.LOGGER;
 
