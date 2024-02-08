@@ -1,11 +1,10 @@
 package io.github.magicquartz.engrok;
 
+import io.github.magicquartz.engrok.command.TunnelCommand;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.minecraft.server.MinecraftServer;
 
 import static io.github.magicquartz.engrok.Engrok.LOGGER;
 
@@ -16,11 +15,6 @@ public class EngrokServer implements DedicatedServerModInitializer {
     public void onInitializeServer() {
         LOGGER.info("Dedicated server detected!");
 
-        /*ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            port = server.getServerPort();
-            LOGGER.info("PORT AAAA " + port);
-        });*/
+        CommandRegistrationCallback.EVENT.register(TunnelCommand::register);
     }
-
-
 }

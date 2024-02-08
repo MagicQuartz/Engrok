@@ -9,8 +9,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MinecraftServer.class)
 public abstract class CloseTunnelMixin {
-    @Inject(at = @At("TAIL"), method = "shutdown")
-    private void afterShutdownServer(CallbackInfo info)
+    @Inject(at = @At("HEAD"), method = "shutdown")
+    private void whenShutdownServer(CallbackInfo info)
     {
         if(Engrok.tunnelOpen)
         {
