@@ -5,15 +5,6 @@ import io.github.magicquartz.engrok.config.EngrokConfig;
 import me.shedaniel.autoconfig.AutoConfig;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPatch;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,6 +12,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+
 public class GitHubGists {
     EngrokConfig config = AutoConfig.getConfigHolder(EngrokConfig.class).getConfig();
     private final String GITHUB_API_BASE_URL = "https://api.github.com";
@@ -56,21 +49,21 @@ public class GitHubGists {
         String postData = "{\"files\": {\"" + fileName + "\": {\"content\": \"" + content + "\"}}}";
 
         try (OutputStream os = connection.getOutputStream()) {
-            byte[] input = postData.getBytes("utf-8");
+            byte[] input = postData.getBytes(StandardCharsets.UTF_8);
             os.write(input, 0, input.length);
         }
 
         try (BufferedReader br = new BufferedReader(
-                new InputStreamReader(connection.getInputStream(), "utf-8"))) {
+                new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
             StringBuilder response = new StringBuilder();
             String responseLine;
             while ((responseLine = br.readLine()) != null) {
                 response.append(responseLine.trim());
             }
-            Engrok.LOGGER.info("Created Gist: " + response.toString());
 
             JsonObject jsonObject = JsonParser.parseString(response.toString()).getAsJsonObject();
             config.gistId = jsonObject.get("id").getAsString();
+            Engrok.LOGGER.info("Created Gist, url: " + jsonObject.get("html_url").getAsString());
             Engrok.configHolder.save();
         }
         connection.disconnect();
@@ -88,21 +81,75 @@ public class GitHubGists {
         String postData = "{\"_method\": \"PATCH\", \"files\": {\"" + fileName + "\": {\"content\": \"" + content + "\"}}}";
 
         try (OutputStream os = connection.getOutputStream()) {
-            byte[] input = postData.getBytes("utf-8");
+            byte[] input = postData.getBytes(StandardCharsets.UTF_8);
             os.write(input, 0, input.length);
         }
 
         try (BufferedReader br = new BufferedReader(
-                new InputStreamReader(connection.getInputStream(), "utf-8"))) {
+                new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
             StringBuilder response = new StringBuilder();
             String responseLine;
             while ((responseLine = br.readLine()) != null) {
                 response.append(responseLine.trim());
             }
-            Engrok.LOGGER.info("Edited Gist: " + response.toString());
+
+            JsonObject jsonObject = JsonParser.parseString(response.toString()).getAsJsonObject();
+            Engrok.LOGGER.info("Edited Gist, new address " + jsonObject.get("html_url").getAsString());
         }
 
         connection.disconnect();
     }
 
+    public String getGistUrl() throws IOException
+    {
+        String gistId = config.gistId;
+        String apiUrl = GITHUB_API_BASE_URL + "/gists/" + gistId;
+        URL url = new URL(apiUrl);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Authorization", "token " + GITHUB_TOKEN);
+
+        StringBuilder content = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(
+                new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
+            String responseLine;
+            while ((responseLine = br.readLine()) != null) {
+                content.append(responseLine);
+            }
+        }
+
+        connection.disconnect();
+
+        JsonObject jsonObject = JsonParser.parseString(content.toString()).getAsJsonObject();
+        return jsonObject.get("html_url").getAsString();
+    }
+    
+    public String getGistContent() throws IOException {
+        String gistId = config.gistId;
+        String apiUrl = GITHUB_API_BASE_URL + "/gists/" + gistId;
+        URL url = new URL(apiUrl);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Authorization", "token " + GITHUB_TOKEN);
+
+        StringBuilder content = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(
+                new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
+            String responseLine;
+            while ((responseLine = br.readLine()) != null) {
+                content.append(responseLine);
+            }
+        }
+
+        connection.disconnect();
+
+        // Parse the JSON response to extract the gist content
+        JsonObject gistJson = JsonParser.parseString(content.toString()).getAsJsonObject();
+        JsonObject files = gistJson.getAsJsonObject("files");
+
+        String fileName = files.keySet().iterator().next(); // Get the first file name
+        JsonObject file = files.getAsJsonObject(fileName);
+
+        return file.get("content").getAsString();
+    }
 }

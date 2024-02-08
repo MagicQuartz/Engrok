@@ -15,6 +15,6 @@ public class EngrokServer implements DedicatedServerModInitializer {
     public void onInitializeServer() {
         LOGGER.info("Dedicated server detected!");
 
-        CommandRegistrationCallback.EVENT.register(TunnelCommand::register);
+        Engrok.registerCommands();
     }
 }

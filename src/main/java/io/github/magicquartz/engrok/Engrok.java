@@ -1,5 +1,7 @@
 package io.github.magicquartz.engrok;
 
+import io.github.magicquartz.engrok.command.EngrokCommand;
+import io.github.magicquartz.engrok.command.GistCommand;
 import io.github.magicquartz.engrok.command.TunnelCommand;
 import io.github.magicquartz.engrok.config.EngrokConfig;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -29,5 +31,7 @@ public class Engrok implements ModInitializer {
 	public static void registerCommands()
 	{
 		CommandRegistrationCallback.EVENT.register(TunnelCommand::register);
+		CommandRegistrationCallback.EVENT.register(GistCommand::register);
+		CommandRegistrationCallback.EVENT.register(EngrokCommand::register);
 	}
 }
