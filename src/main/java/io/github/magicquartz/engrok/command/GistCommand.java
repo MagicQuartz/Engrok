@@ -42,9 +42,14 @@ public class GistCommand {
             sendMessage(context, "§cPlease keep in mind that the Ngrok tunnel is currently closed, so the provided ip in the file is almost certainly inaccurate.");
 
         if(sender != null)
+        {
             sender.sendMessage(Text.literal("§l§9[Engrok] §r§7Gist url: §a").append(Text.literal(gistUrl).setStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, gistUrl)))));
-        else
+            sender.sendMessage(Text.literal("Make sure to share this link with the server's players so they can enter if they're using §c§n").append(Text.literal("EverChanging").setStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://https://modrinth.com/mod/ever-changing")))));
+        } else {
             Engrok.LOGGER.info("Gist url: " + gistUrl);
+            Engrok.LOGGER.info("Make sure to share this link with the server's players so they can enter if they're using EverChanging!");
+        }
+
         return 1;
 
     }

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -39,7 +40,8 @@ public class GitHubGists {
 
     private void createGist(String content, String fileName) throws IOException {
         String apiUrl = GITHUB_API_BASE_URL + "/gists";
-        URL url = new URL(apiUrl);
+        URI uri = URI.create(apiUrl);
+        URL url = uri.toURL();
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Authorization", "token " + GITHUB_TOKEN);
@@ -70,7 +72,8 @@ public class GitHubGists {
     }
     private void editGist(String gistId, String content, String fileName) throws IOException {
         String apiUrl = GITHUB_API_BASE_URL + "/gists/" + gistId;
-        URL url = new URL(apiUrl);
+        URI uri = URI.create(apiUrl);
+        URL url = uri.toURL();
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST"); // Use POST method
         connection.setRequestProperty("Authorization", "token " + GITHUB_TOKEN);
@@ -106,7 +109,8 @@ public class GitHubGists {
         if(gistId.isEmpty())
             return "Error: No Gist ID Exists in the config file!";
         String apiUrl = GITHUB_API_BASE_URL + "/gists/" + gistId;
-        URL url = new URL(apiUrl);
+        URI uri = URI.create(apiUrl);
+        URL url = uri.toURL();
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Authorization", "token " + GITHUB_TOKEN);
@@ -131,7 +135,8 @@ public class GitHubGists {
         if(gistId.isEmpty())
             return "Error: No Gist ID Exists in the config file!";
         String apiUrl = GITHUB_API_BASE_URL + "/gists/" + gistId;
-        URL url = new URL(apiUrl);
+        URI uri = URI.create(apiUrl);
+        URL url = uri.toURL();
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Authorization", "token " + GITHUB_TOKEN);
